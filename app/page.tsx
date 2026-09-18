@@ -1,21 +1,111 @@
 "use client";
-import { useState } from "react";
-import { ArrowUpRight, Clock3, MapPin, Menu, ShoppingBag, Sparkles, Star, X } from "lucide-react";
 
-const tabs=["Início","Cardápio","Pizzas","Bebidas","Sobremesas","Nossa história","Localização","Contato"];
-const pizzas=[
- {name:"Céu de Santos",ingredients:"camarão rosa, mussarela, cebola roxa, salsinha e azeitonas",price:"R$ 89",tone:"gold"},
- {name:"Noite Azul",ingredients:"gorgonzola, pera assada, nozes e mel de florada",price:"R$ 82",tone:"blue"},
- {name:"Ateliê da Casa",ingredients:"presunto cru, burrata, rúcula e tomates confitados",price:"R$ 86",tone:"terracotta"},
- {name:"Girassol",ingredients:"abobrinha, queijo de cabra, pesto de manjericão e limão siciliano",price:"R$ 78",tone:"sun"},
+import { useEffect, useRef, useState } from "react";
+import { ArrowDown, ArrowUpRight, MapPin, Menu, Phone, X } from "lucide-react";
+import { LivingPainting } from "@/components/living-painting";
+
+const DELIVERY = "https://deliverydireto.com.br/vangogh/vangogh";
+const links = [
+  ["inicio", "Início"], ["cardapio", "Cardápio"], ["sobre", "Sobre"], ["contato", "Contato"],
+] as const;
+const highlights = [
+  { name: "Pizza de Camarão", description: "Camarão rosa; mussarela ou catupiry, com cebola, salsinha e azeitonas." },
+  { name: "Happy Hour Van Gogh", description: "A partir das 17h: cornicciones, pizzetas e outros aperitivos." },
+  { name: "Adega", description: "Vinhos para acompanhar a refeição, com orientação de um sommelier." },
 ];
-export default function Home(){
- const [active,setActive]=useState("Início"),[open,setOpen]=useState(false),[cart,setCart]=useState(0);
- const go=(tab:string)=>{setActive(tab);setOpen(false);document.getElementById("content")?.scrollIntoView({behavior:"smooth"})};
-  return <main className="museum-frame"><div className="canvas-shell"><div className="paint-dust"/>
-  <header className="topbar"><button className="brand" onClick={()=>go("Início")}><span className="brand-mark">✦</span><span><b>Van-Gogh</b><small>PIZZARIA · SANTOS</small></span></button><nav className="desktop-nav">{tabs.slice(0,6).map(t=><button className={active===t?"active":""} key={t} onClick={()=>go(t)}>{t}</button>)}</nav><div className="top-actions"><button className="icon-btn mobile-only" onClick={()=>setOpen(!open)} aria-label="Menu">{open?<X size={20}/>:<Menu size={20}/>}</button><button className="order-btn" onClick={()=>go("Cardápio")}><ShoppingBag size={16}/> <span>Fazer pedido</span>{cart>0&&<em>{cart}</em>}</button></div></header>
-  {open&&<nav className="mobile-nav">{tabs.map(t=><button key={t} onClick={()=>go(t)}>{t}<ArrowUpRight size={15}/></button>)}</nav>}
-  {active==="Início"?<section className="hero"><div className="hero-copy"><p className="eyebrow"><Sparkles size={14}/> PIZZARIA · SANTOS</p><h1>Uma boa noite<br/><span>começa à mesa.</span></h1><p className="hero-text">Pizzas artesanais, ingredientes selecionados e o prazer de receber você no José Menino.</p><div className="hero-actions"><button className="gold-btn" onClick={()=>go("Pizzas")}>Ver o cardápio <ArrowUpRight size={17}/></button><button className="text-btn" onClick={()=>go("Nossa história")}>Conheça a casa</button></div><div className="hero-meta"><span><Clock3 size={15}/> Aberto hoje a partir das 17h</span><span>José Menino · Santos</span></div></div><div className="hero-art"><div className="starry-image"><img src="/starry-night.jpg" alt="Detalhe de A Noite Estrelada, de Vincent van Gogh"/><div className="image-glow"/></div><div className="art-caption"><span>REFERÊNCIA DA CASA</span><b>A Noite Estrelada</b><small>Vincent van Gogh · 1889</small></div></div></section>:<section className="section-view" id="content"><div className="section-heading"><p className="eyebrow"><Sparkles size={14}/> VAN-GOGH · SANTOS</p><h1>{active==="Cardápio"?"O caderno do forno":active==="Nossa história"?"Uma história feita à mão":active}</h1><p>{active==="Localização"?"No coração do José Menino, a poucos passos da praia.":active==="Contato"?"Para reservas, dúvidas ou uma boa conversa.":"Escolhas autorais, ingredientes honestos e o calor que reúne a mesa."}</p></div>{(active==="Cardápio"||active==="Pizzas")&&<div className="menu-layout"><aside className="menu-index"><span>CATÁLOGO 2026</span>{["Pizzas","Entradas","Bebidas","Sobremesas"].map(x=><button key={x} onClick={()=>setActive(x)}>{x}<ArrowUpRight size={14}/></button>)}</aside><div className="gallery-grid">{pizzas.map((p,i)=><article className={`dish-card ${p.tone}`} key={p.name}><div className="dish-photo"><div className="mini-pizza"/><span className="frame-number">0{i+1}</span></div><div className="dish-info"><p>OBRA COMESTÍVEL</p><h2>{p.name}</h2><span>{p.ingredients}</span><footer><b>{p.price}</b><button onClick={()=>setCart(cart+1)}><ShoppingBag size={15}/> adicionar</button></footer></div></article>)}</div></div>}{active==="Bebidas"&&<Info title="Para acompanhar a noite" items={["Vinhos selecionados da nossa adega","Drinks com cítricos, ervas e gelo cristalino","Refrigerantes artesanais e água"]}/>} {active==="Sobremesas"&&<Info title="O último gesto" items={["Tiramisù da casa","Panna cotta de baunilha e frutas amarelas","Pizza doce de chocolate e flor de sal"]}/>} {active==="Nossa história"&&<div className="story-panel"><div className="brushes">╱ ╲<br/>╱ ╲</div><div><p className="eyebrow">DESDE 1994 · JOSÉ MENINO</p><h2>Tradição com uma pitada de ateliê.</h2><p>Há décadas, a Van-Gogh faz parte das noites de Santos. A nossa cozinha combina receitas clássicas, ingredientes de qualidade e o prazer de receber sem pressa — como quem prepara uma tela, camada por camada.</p></div></div>} {active==="Localização"&&<div className="location-card"><div className="map-paint"><MapPin size={38}/><span>José Menino</span><small>mapa afetivo de Santos</small></div><div className="contact-details"><p className="eyebrow">ONDE ESTAMOS</p><h2>Av. Mal. Floriano Peixoto, 314</h2><p>José Menino · Santos, SP · 11060-302</p><div className="hours"><b><Clock3 size={16}/> Horários</b><span>Seg–Qui · 17h às 23h30</span><span>Sex · 17h à 00h</span><span>Sáb–Dom · 11h à 00h</span></div><a className="gold-btn" href="https://maps.google.com/?q=Av.+Mal.+Floriano+Peixoto,+314,+Santos" target="_blank">Abrir no mapa <ArrowUpRight size={16}/></a></div></div>} {active==="Contato"&&<Info title="Fale com a casa" items={["(13) 3225-3636","(13) 3205-3636","contato@vangoghpizza.com.br","Delivery, salão e reservas"]}/>}</section>}
-  <footer className="site-footer"><span>Van-Gogh <small>pizzaria & restaurante</small></span><span>Av. Mal. Floriano Peixoto, 314 · Santos/SP</span><span className="footer-social">◎ @vangoghsantos</span></footer></div></main>
+export default function Home() {
+  const scene = useRef<HTMLDivElement>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [active, setActive] = useState("inicio");
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) if (entry.isIntersecting) setActive(entry.target.id);
+    }, { rootMargin: "-15% 0px -55% 0px", threshold: 0 });
+    links.forEach(([id]) => { const element = document.getElementById(id); if (element) observer.observe(element); });
+    const escape = (event: KeyboardEvent) => { if (event.key === "Escape") setMenuOpen(false); };
+    document.addEventListener("keydown", escape);
+    return () => { observer.disconnect(); document.removeEventListener("keydown", escape); };
+  }, []);
+
+  return (
+    <>
+      <a className="skip-link" href="#inicio">Pular para o conteúdo</a>
+      <LivingPainting scene={scene} />
+      <header className="site-header">
+        <a className="wordmark" href="#inicio" onClick={() => setMenuOpen(false)} aria-label="Van-Gogh Pizzaria — início">
+          <span>Van-Gogh</span><small>Pizzaria</small>
+        </a>
+        <nav className="desktop-nav" aria-label="Navegação principal">
+          {links.map(([id, label]) => <a key={id} href={`#${id}`} aria-current={active === id ? "location" : undefined}>{label}</a>)}
+        </nav>
+        <a className="header-order" href={DELIVERY} target="_blank" rel="noopener noreferrer">Pedir online <ArrowUpRight size={16} /></a>
+        <button className="menu-toggle" type="button" aria-label={menuOpen ? "Fechar menu" : "Abrir menu"} aria-expanded={menuOpen} aria-controls="mobile-navigation" onClick={() => setMenuOpen(!menuOpen)}>
+          {menuOpen ? <X /> : <Menu />}
+        </button>
+        <nav id="mobile-navigation" className="mobile-nav" aria-label="Navegação móvel" hidden={!menuOpen}>
+          {links.map(([id, label]) => <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)} aria-current={active === id ? "location" : undefined}>{label}<ArrowUpRight size={18} /></a>)}
+        </nav>
+      </header>
+      <main>
+        <div className="painted-journey" ref={scene}>
+          <section className="hero page-width" id="inicio" aria-labelledby="hero-title">
+            <div className="hero-copy">
+              <h1 id="hero-title">Van-Gogh <span>Pizzaria</span></h1>
+              <h2>Restaurante e Pizzaria em Santos</h2>
+              <p>Receitas tradicionais com toques contemporâneos.<br />No José Menino, em Santos.</p>
+              <div className="hero-actions">
+                <a className="button button-gold" href={DELIVERY} target="_blank" rel="noopener noreferrer">Pedir online <ArrowUpRight size={18} /></a>
+                <a className="quiet-link" href="#cardapio">Conhecer o cardápio</a>
+              </div>
+            </div>
+            <a href="#cardapio" className="scroll-cue"><span>Descubra mais</span><ArrowDown size={20} /></a>
+          </section>
+          <div className="landscape-passage" aria-hidden="true" />
+          <section className="menu-section page-width" id="cardapio" aria-labelledby="menu-title">
+            <div className="glass-panel menu-panel">
+              <h2 id="menu-title">Sugestões do Chef</h2>
+              <div className="highlights">
+                {highlights.map(item => <article key={item.name}>
+                  <div><h3>{item.name}</h3><p>{item.description}</p></div>
+                  <a href={DELIVERY} target="_blank" rel="noopener noreferrer" aria-label={`Consultar ${item.name} no cardápio oficial`}><ArrowUpRight size={23} /></a>
+                </article>)}
+              </div>
+              <a className="quiet-link full-menu" href={DELIVERY} target="_blank" rel="noopener noreferrer">Ver cardápio completo e preços <ArrowUpRight size={18} /></a>
+            </div>
+          </section>
+        </div>
+        <div className="restaurant-details">
+          <section className="about-section page-width" id="sobre" aria-labelledby="about-title">
+            <p className="eyebrow">A casa</p>
+            <div className="about-layout">
+              <h2 id="about-title">À mesa,<br /><em>em Santos.</em></h2>
+              <div className="about-copy">
+                <p>A Van Gogh reúne pizzas, massas, risotos, saladas e pratos de carnes, peixes e camarões em seu restaurante no José Menino.</p>
+                <p>O cardápio inclui opções de pizzas doces e sem lactose, além de entradas como burratas e carpaccios. A carta de vinhos acompanha a experiência.</p>
+                <a className="quiet-link" href={DELIVERY + "/pages/sobre-nos"} target="_blank" rel="noopener noreferrer">Conheça o restaurante <ArrowUpRight size={18} /></a>
+              </div>
+            </div>
+          </section>
+          <section className="contact-section page-width" id="contato" aria-labelledby="contact-title">
+            <div className="contact-intro"><p className="eyebrow">José Menino · Santos</p><h2 id="contact-title">Venha à<br /><em>Van-Gogh.</em></h2></div>
+            <div className="contact-info">
+              <h3><MapPin size={19} /> Localização</h3>
+              <address>Av. Mal. Floriano Peixoto, 314<br />José Menino, Santos – SP</address>
+              <a className="quiet-link" href="https://www.google.com/maps/search/?api=1&query=Van+Gogh+Av+Mal+Floriano+Peixoto+314+Santos" target="_blank" rel="noopener noreferrer">Traçar rota <ArrowUpRight size={17} /></a>
+              <h3><Phone size={18} /> Fale com a casa</h3>
+              <a className="phone-link" href="tel:+551332253636">(13) 3225-3636</a>
+              <a className="phone-link" href="tel:+551332053636">(13) 3205-3636</a>
+              <a className="email-link" href="mailto:contato@vangoghpizza.com.br">contato@vangoghpizza.com.br</a>
+              <a className="button button-gold" href={DELIVERY} target="_blank" rel="noopener noreferrer">Consultar horários e pedir <ArrowUpRight size={17} /></a>
+            </div>
+          </section>
+          <footer className="site-footer page-width">
+            <a className="wordmark" href="#inicio"><span>Van-Gogh</span><small>Pizzaria</small></a>
+            <p>Conceito independente de design.<br /><a href="https://www.vangoghpizza.com.br/" target="_blank" rel="noopener noreferrer">Visitar site oficial</a></p>
+          </footer>
+        </div>
+      </main>
+    </>
+  );
 }
-function Info({title,items}:{title:string;items:string[]}){return <div className="info-panel"><div className="sunflower"><span>✽</span></div><div><p className="eyebrow">ANOTAÇÕES DO ATELIÊ</p><h2>{title}</h2>{items.map(i=><div className="info-row" key={i}><Star size={14}/>{i}</div>)}</div></div>}
