@@ -1,106 +1,21 @@
-const sidebarWidths = [74, 58, 82, 66, 71, 54];
-const articleWidths = [100, 97, 94, 98, 86];
+"use client";
+import { useState } from "react";
+import { ArrowUpRight, Clock3, MapPin, Menu, ShoppingBag, Sparkles, Star, X } from "lucide-react";
 
-export default function Home() {
-  return (
-    <main className="fixed inset-0 overflow-hidden bg-[#fbfaf8] text-zinc-900">
-      <header
-        aria-hidden="true"
-        className="grid h-[76px] grid-cols-[1fr_auto_1fr] items-center border-b border-stone-200 bg-white/95 px-6 sm:px-14"
-      >
-        <div className="flex items-center gap-3">
-          <span className="h-9 w-9 rounded-full bg-stone-100" />
-          <span className="h-3.5 w-28 rounded-full bg-stone-100" />
-        </div>
-        <span className="hidden h-9 w-[min(30vw,420px)] rounded-xl bg-stone-100 sm:block" />
-        <div className="flex items-center justify-end gap-3">
-          <span className="hidden h-9 w-9 rounded-full bg-stone-100 sm:block" />
-          <span className="h-9 w-24 rounded-xl bg-stone-100" />
-        </div>
-      </header>
-
-      <div
-        aria-hidden="true"
-        className="grid h-[calc(100%-76px)] grid-cols-[180px_minmax(0,1fr)_260px] gap-10 px-6 pb-24 pt-10 opacity-55 max-lg:grid-cols-[150px_minmax(0,1fr)] max-sm:grid-cols-1 sm:px-14"
-      >
-        <aside className="hidden border-r border-stone-200 pr-7 sm:block">
-          <div className="mb-6 h-2.5 w-16 rounded-full bg-stone-200" />
-          <div className="space-y-4">
-            {sidebarWidths.map((width) => (
-              <div key={width} className="flex items-center gap-3">
-                <span className="h-4 w-4 rounded bg-stone-200" />
-                <span
-                  className="h-2.5 rounded-full bg-stone-200"
-                  style={{ width: `${width}%` }}
-                />
-              </div>
-            ))}
-          </div>
-          <div className="mb-6 mt-9 h-2.5 w-24 rounded-full bg-stone-200" />
-          <div className="space-y-4">
-            {sidebarWidths.slice(0, 3).map((width) => (
-              <span
-                key={width}
-                className="block h-2.5 rounded-full bg-stone-200"
-                style={{ width: `${width}%` }}
-              />
-            ))}
-          </div>
-        </aside>
-
-        <article className="mx-auto flex w-full max-w-3xl flex-col gap-6">
-          <div className="space-y-3">
-            <div className="h-2.5 w-28 rounded-full bg-stone-200" />
-            <div className="h-7 w-4/5 rounded-lg bg-stone-200" />
-            <div className="h-7 w-3/5 rounded-lg bg-stone-200" />
-          </div>
-          <div className="min-h-[240px] flex-1 rounded-2xl bg-stone-200" />
-          <div className="flex items-center gap-3">
-            <span className="h-9 w-9 rounded-full bg-stone-200" />
-            <span className="h-2.5 w-28 rounded-full bg-stone-200" />
-          </div>
-          <div className="space-y-2">
-            {articleWidths.map((width) => (
-              <span
-                key={width}
-                className="block h-2.5 rounded-full bg-stone-200"
-                style={{ width: `${width}%` }}
-              />
-            ))}
-          </div>
-        </article>
-
-        <aside className="space-y-5 max-lg:hidden">
-          {[0, 1].map((card) => (
-            <div
-              key={card}
-              className="space-y-4 rounded-2xl border border-stone-200 bg-white/70 p-6"
-            >
-              <span className="block h-10 w-10 rounded-full bg-stone-200" />
-              <span className="block h-3 w-3/5 rounded-full bg-stone-200" />
-              <span className="block h-2.5 w-full rounded-full bg-stone-200" />
-              <span className="block h-2.5 w-4/5 rounded-full bg-stone-200" />
-              <span className="block h-8 w-24 rounded-lg bg-stone-200" />
-            </div>
-          ))}
-        </aside>
-      </div>
-
-      <output
-        aria-live="polite"
-        aria-atomic="true"
-        className="absolute left-1/2 top-[clamp(96px,13vh,122px)] w-[min(620px,calc(100%-40px))] -translate-x-1/2 rounded-[18px] border border-stone-200 bg-white/95 px-5 py-5 shadow-[0_18px_50px_rgb(24_24_27/9%)] backdrop-blur-sm"
-      >
-        <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.09em] text-stone-500">
-          Building your site
-        </p>
-        <h1 className="text-xl font-semibold tracking-tight">
-          Your site is taking shape
-        </h1>
-        <p className="mt-1 text-sm text-stone-500">
-          Your first version will appear here automatically when it’s ready.
-        </p>
-      </output>
-    </main>
-  );
+const tabs=["Início","Cardápio","Pizzas","Bebidas","Sobremesas","Nossa história","Localização","Contato"];
+const pizzas=[
+ {name:"Céu de Santos",ingredients:"camarão rosa, mussarela, cebola roxa, salsinha e azeitonas",price:"R$ 89",tone:"gold"},
+ {name:"Noite Azul",ingredients:"gorgonzola, pera assada, nozes e mel de florada",price:"R$ 82",tone:"blue"},
+ {name:"Ateliê da Casa",ingredients:"presunto cru, burrata, rúcula e tomates confitados",price:"R$ 86",tone:"terracotta"},
+ {name:"Girassol",ingredients:"abobrinha, queijo de cabra, pesto de manjericão e limão siciliano",price:"R$ 78",tone:"sun"},
+];
+export default function Home(){
+ const [active,setActive]=useState("Início"),[open,setOpen]=useState(false),[cart,setCart]=useState(0);
+ const go=(tab:string)=>{setActive(tab);setOpen(false);document.getElementById("content")?.scrollIntoView({behavior:"smooth"})};
+  return <main className="museum-frame"><div className="canvas-shell"><div className="paint-dust"/>
+  <header className="topbar"><button className="brand" onClick={()=>go("Início")}><span className="brand-mark">✦</span><span><b>Van-Gogh</b><small>PIZZARIA · SANTOS</small></span></button><nav className="desktop-nav">{tabs.slice(0,6).map(t=><button className={active===t?"active":""} key={t} onClick={()=>go(t)}>{t}</button>)}</nav><div className="top-actions"><button className="icon-btn mobile-only" onClick={()=>setOpen(!open)} aria-label="Menu">{open?<X size={20}/>:<Menu size={20}/>}</button><button className="order-btn" onClick={()=>go("Cardápio")}><ShoppingBag size={16}/> <span>Fazer pedido</span>{cart>0&&<em>{cart}</em>}</button></div></header>
+  {open&&<nav className="mobile-nav">{tabs.map(t=><button key={t} onClick={()=>go(t)}>{t}<ArrowUpRight size={15}/></button>)}</nav>}
+  {active==="Início"?<section className="hero"><div className="hero-copy"><p className="eyebrow"><Sparkles size={14}/> PIZZARIA · SANTOS</p><h1>Uma boa noite<br/><span>começa à mesa.</span></h1><p className="hero-text">Pizzas artesanais, ingredientes selecionados e o prazer de receber você no José Menino.</p><div className="hero-actions"><button className="gold-btn" onClick={()=>go("Pizzas")}>Ver o cardápio <ArrowUpRight size={17}/></button><button className="text-btn" onClick={()=>go("Nossa história")}>Conheça a casa</button></div><div className="hero-meta"><span><Clock3 size={15}/> Aberto hoje a partir das 17h</span><span>José Menino · Santos</span></div></div><div className="hero-art"><div className="starry-image"><img src="/starry-night.jpg" alt="Detalhe de A Noite Estrelada, de Vincent van Gogh"/><div className="image-glow"/></div><div className="art-caption"><span>REFERÊNCIA DA CASA</span><b>A Noite Estrelada</b><small>Vincent van Gogh · 1889</small></div></div></section>:<section className="section-view" id="content"><div className="section-heading"><p className="eyebrow"><Sparkles size={14}/> VAN-GOGH · SANTOS</p><h1>{active==="Cardápio"?"O caderno do forno":active==="Nossa história"?"Uma história feita à mão":active}</h1><p>{active==="Localização"?"No coração do José Menino, a poucos passos da praia.":active==="Contato"?"Para reservas, dúvidas ou uma boa conversa.":"Escolhas autorais, ingredientes honestos e o calor que reúne a mesa."}</p></div>{(active==="Cardápio"||active==="Pizzas")&&<div className="menu-layout"><aside className="menu-index"><span>CATÁLOGO 2026</span>{["Pizzas","Entradas","Bebidas","Sobremesas"].map(x=><button key={x} onClick={()=>setActive(x)}>{x}<ArrowUpRight size={14}/></button>)}</aside><div className="gallery-grid">{pizzas.map((p,i)=><article className={`dish-card ${p.tone}`} key={p.name}><div className="dish-photo"><div className="mini-pizza"/><span className="frame-number">0{i+1}</span></div><div className="dish-info"><p>OBRA COMESTÍVEL</p><h2>{p.name}</h2><span>{p.ingredients}</span><footer><b>{p.price}</b><button onClick={()=>setCart(cart+1)}><ShoppingBag size={15}/> adicionar</button></footer></div></article>)}</div></div>}{active==="Bebidas"&&<Info title="Para acompanhar a noite" items={["Vinhos selecionados da nossa adega","Drinks com cítricos, ervas e gelo cristalino","Refrigerantes artesanais e água"]}/>} {active==="Sobremesas"&&<Info title="O último gesto" items={["Tiramisù da casa","Panna cotta de baunilha e frutas amarelas","Pizza doce de chocolate e flor de sal"]}/>} {active==="Nossa história"&&<div className="story-panel"><div className="brushes">╱ ╲<br/>╱ ╲</div><div><p className="eyebrow">DESDE 1994 · JOSÉ MENINO</p><h2>Tradição com uma pitada de ateliê.</h2><p>Há décadas, a Van-Gogh faz parte das noites de Santos. A nossa cozinha combina receitas clássicas, ingredientes de qualidade e o prazer de receber sem pressa — como quem prepara uma tela, camada por camada.</p></div></div>} {active==="Localização"&&<div className="location-card"><div className="map-paint"><MapPin size={38}/><span>José Menino</span><small>mapa afetivo de Santos</small></div><div className="contact-details"><p className="eyebrow">ONDE ESTAMOS</p><h2>Av. Mal. Floriano Peixoto, 314</h2><p>José Menino · Santos, SP · 11060-302</p><div className="hours"><b><Clock3 size={16}/> Horários</b><span>Seg–Qui · 17h às 23h30</span><span>Sex · 17h à 00h</span><span>Sáb–Dom · 11h à 00h</span></div><a className="gold-btn" href="https://maps.google.com/?q=Av.+Mal.+Floriano+Peixoto,+314,+Santos" target="_blank">Abrir no mapa <ArrowUpRight size={16}/></a></div></div>} {active==="Contato"&&<Info title="Fale com a casa" items={["(13) 3225-3636","(13) 3205-3636","contato@vangoghpizza.com.br","Delivery, salão e reservas"]}/>}</section>}
+  <footer className="site-footer"><span>Van-Gogh <small>pizzaria & restaurante</small></span><span>Av. Mal. Floriano Peixoto, 314 · Santos/SP</span><span className="footer-social">◎ @vangoghsantos</span></footer></div></main>
 }
+function Info({title,items}:{title:string;items:string[]}){return <div className="info-panel"><div className="sunflower"><span>✽</span></div><div><p className="eyebrow">ANOTAÇÕES DO ATELIÊ</p><h2>{title}</h2>{items.map(i=><div className="info-row" key={i}><Star size={14}/>{i}</div>)}</div></div>}
