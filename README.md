@@ -1,4 +1,41 @@
-# vinext-starter
+# Van-Gogh Pizzeria
+
+Site premium para a Pizzaria Van-Gogh, em Santos (SP), inspirado na linguagem visual de Vincent van Gogh.
+
+## Conceito
+
+Uma experiência de pizzaria apresentada como uma obra de arte: molduras elegantes, texturas de tela, paleta de azul ultramarino e amarelo-ocre, referências à Noite Estrelada e aos Girassóis, além de animações sutis.
+
+## Objetivos do projeto
+
+- Apresentar a pizzaria e seu cardápio com uma identidade visual autoral.
+- Preservar uma navegação prática para encontrar pizzas, preços, localização e contato.
+- Explorar animações e interações inspiradas em pintura a óleo sem comprometer acessibilidade ou performance.
+- Criar uma base responsiva para desktop, tablet e celular.
+
+## Stack
+
+- Next.js/Vinext
+- TypeScript
+- Tailwind CSS
+- Componentes Shadcn UI
+- Cloudflare Sites
+
+## Desenvolvimento local
+
+```bash
+npm run dev
+```
+
+O projeto abre o preview local na porta `5173`.
+
+## Status
+
+Projeto inicializado. A próxima etapa é implementar a primeira direção visual da homepage e validar o conteúdo real da Pizzaria Van-Gogh.
+
+## Repositório
+
+[github.com/gustavomartins-dev/van-gogh-pizzeria](https://github.com/gustavomartins-dev/van-gogh-pizzeria)
 
 A clean full-stack starter running on [vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and Drizzle support.
 
