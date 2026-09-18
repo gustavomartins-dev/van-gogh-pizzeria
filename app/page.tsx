@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowDown, ArrowUpRight, MapPin, Menu, Phone, X } from "lucide-react";
 import { LivingPainting } from "@/components/living-painting";
+import { BrandLogo } from "@/components/brand-logo";
 
 const DELIVERY = "https://deliverydireto.com.br/vangogh/vangogh";
 const links = [
@@ -34,7 +35,7 @@ export default function Home() {
       <LivingPainting scene={scene} />
       <header className="site-header">
         <a className="wordmark" href="#inicio" onClick={() => setMenuOpen(false)} aria-label="Van-Gogh Pizzaria — início">
-          <span>Van-Gogh</span><small>Pizzaria</small>
+          <BrandLogo className="header-logo" /><small>Pizzaria</small>
         </a>
         <nav className="desktop-nav" aria-label="Navegação principal">
           {links.map(([id, label]) => <a key={id} href={`#${id}`} aria-current={active === id ? "location" : undefined}>{label}</a>)}
@@ -51,7 +52,7 @@ export default function Home() {
         <div className="painted-journey" ref={scene}>
           <section className="hero page-width" id="inicio" aria-labelledby="hero-title">
             <div className="hero-copy">
-              <h1 id="hero-title">Van-Gogh <span>Pizzaria</span></h1>
+              <h1 id="hero-title"><BrandLogo className="hero-logo" /><span>Pizzaria</span></h1>
               <h2>Restaurante e Pizzaria em Santos</h2>
               <p>Receitas tradicionais com toques contemporâneos.<br />No José Menino, em Santos.</p>
               <div className="hero-actions">

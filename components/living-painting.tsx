@@ -16,11 +16,17 @@ void main(){
  vec2 p=vec2(uv.x,1.-uv.y);
  vec2 q=vec2((p.x*viewport.x+(picture.x-viewport.x)*.5)/picture.x,(p.y*viewport.y+scrollOffset)/picture.y);
  float sky=1.-smoothstep(.46,.60,q.y);
- float flowers=smoothstep(.55,.75,q.y);
+ float flowers=smoothstep(.54,.73,q.y);
  float breeze=sin(q.y*20.+time*.55+sin(q.x*9.-time*.22));
  float ribbon=sin(q.x*13.+q.y*18.-time*.35);
- q.x+=motion*(sky*breeze*.0025+flowers*sin(time*.8+q.y*15.+q.x*5.)*.002);
- q.y+=motion*(sky*ribbon*.0013+flowers*cos(time*.6+q.x*10.)*.0007);
+ // Traveling gusts keep neighboring flowers related, without swaying in lockstep.
+ float gust=sin(time*.85-q.x*7.+q.y*3.);
+ float flutter=sin(time*1.45-q.x*18.+q.y*11.);
+ float sway=gust*.0055+flutter*.0013;
+ // Pin the lower edge so the foreground feels rooted rather than sliding.
+ float rooted=1.-smoothstep(.91,1.,q.y);
+ q.x+=motion*(sky*breeze*.0025+flowers*rooted*sway);
+ q.y+=motion*(sky*ribbon*.0013+flowers*rooted*(cos(time*.85-q.x*7.+q.y*3.)*.0011));
  q=clamp(q,vec2(.001),vec2(.999));
  vec3 color=texture2D(painting,q).rgb;
  color*=1.+motion*sky*.012*sin(time*.7+q.x*5.+q.y*4.);
@@ -82,7 +88,7 @@ export function LivingPainting({ scene }: { scene: RefObject<HTMLDivElement | nu
       const progress = Math.max(0, Math.min(1, -(scene.current?.getBoundingClientRect().top || 0) / range));
       const offset = (pictureHeight - height) * progress;
       if (fallback.current) fallback.current.style.transform = `translate3d(0,${-offset}px,0)`;
-      const moving = !pauseRef.current && !media.matches && progress < 1;
+      const moving = !pauseRef.current && !media.matches && (scene.current?.getBoundingClientRect().bottom ?? 0) > 0;
       if (last && moving) time += Math.min((now - last) / 1000, .05);
       last = now;
       if (gl && program && uniforms && loaded) {
@@ -136,6 +142,6 @@ export function LivingPainting({ scene }: { scene: RefObject<HTMLDivElement | nu
       <canvas ref={canvas} className={`living-canvas ${ready ? "is-ready" : ""}`} />
       <div className="painting-shade" />
     </div>
-    {ready && !reduced && <button type="button" className="motion-control" onClick={() => setPaused(!paused)} aria-label={paused ? "Retomar animação da pintura" : "Pausar animação da pintura"} aria-pressed={paused} title={paused ? "Retomar movimento" : "Pausar movimento"}>{paused ? <Play size={15} /> : <Pause size={15} />}<span>{paused ? "Retomar" : "Pausar"} movimento</span></button>}
+    {ready && !reduced && <button type="button" className="motion-control" onClick={() => setPaused(!paused)} aria-label={paused ? "Retomar animação da pintura" : "Pausar animação da pintura"} aria-pressed={paused} title={paused ? "Retomar movimento" : "Pausar movimento"}>{paused ? <Play size={15} aria-hidden="true" /> : <Pause size={15} aria-hidden="true" />}</button>}
   </>;
 }
